@@ -41,16 +41,28 @@ export default {
                     },
                     body: JSON.stringify({username: this.username, password: this.password})
                 })
-                .then( resp => resp.json())
+                .then( resp => {
+                            if(resp.ok){
+                                return resp.json()
+                            }
+                            else{
+                                this.wrongCred = true;
+                                this.errorLogin;     
+                            }
+                        }
+                    )
                 .then( res => {
-                    this.$cookies.set("mr-token", res.token, "30d");
-                    this.$router.push('/');
-                    this.wrongCred = false;
+                    if(res){
+                        this.$cookies.set("mr-token", res.token, "30d");
+                        this.$router.push('/');
+                        console.log(res);
+                    }
+                    else{
+                        console.log(res);
+                    }
                 })
                 .catch( error => {
-                    this.errorLogin();
-                    this.wrongCred = true;
-                    console.log(error);
+                        console.log(error);
                 })
         },
         register(){
